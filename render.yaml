@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: bonobo-backend
+    name: hono-backend
     runtime: docker
     plan: free
     buildCommand: bun install
@@ -8,7 +8,19 @@ services:
     envVars:
       - key: PORT
         generateValue: true
+      - key: NODE_ENV
+        value: production
       - key: FRONTEND_URL
         value: https://your-app.vercel.app
+      - key: DATABASE_URL
+        fromDatabase:
+          name: hono-db
+          property: connectionString
     healthCheckPath: /
+
+databases:
+  - name: hono-db
+    databaseName: hono
+    plan: free
+    user: hono
 
