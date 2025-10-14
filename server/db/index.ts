@@ -10,13 +10,8 @@ if (!connectionString) {
   );
 }
 
-// Create postgres connection with SSL support for production
-const client = postgres(connectionString, {
-  ssl: process.env.NODE_ENV === "production" ? "require" : false,
-  max: 10,
-  idle_timeout: 20,
-  connect_timeout: 10,
-});
+// Create postgres connection
+const client = postgres(connectionString);
 
 // Create drizzle instance
 export const db = drizzle(client, { schema });

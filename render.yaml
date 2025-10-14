@@ -13,14 +13,6 @@ services:
       - key: FRONTEND_URL
         value: https://your-app.vercel.app
       - key: DATABASE_URL
-        fromDatabase:
-          name: hono-db
-          property: connectionString
+        sync: false
     healthCheckPath: /
-
-databases:
-  - name: hono-db
-    databaseName: hono
-    plan: free
-    user: hono
 
