@@ -1,10 +1,10 @@
 import { Hono } from "hono";
-import { serveStatic } from "hono/bun";
-import { logger } from "hono/logger";
 import { zValidator } from "@hono/zod-validator";
 import { z } from "zod";
+import { eq } from "drizzle-orm";
 
-import { teachers } from "../mock/users";
+import { db } from "../db";
+import { teachers } from "../db/schema";
 
 const app = new Hono();
 const userSchema = z.object({
@@ -15,30 +15,44 @@ const userSchema = z.object({
 
 const teacherSchema = userSchema.omit({ id: true });
 
-app.get("/", (c) => c.json(teachers));
-
-app.get("///:id{[0-9]+}", (c) => {
-  const id = Number.parseInt(c.req.param("id"));
-
-  const teacher = teachers.find((teacher) => teacher.id === id);
-
-  return c.json(teacher);
+app.get("/", async (c) => {
+  const allTeachers = await db.select().from(teachers);
+  return c.json(allTeachers);
 });
 
-app.post("/", zValidator("json", teacherSchema), (c) => {
-  const user = c.req.valid("json");
-
-  teachers.push({ ...user, id: teachers.length + 1 });
-
-  return c.json(teachers);
-});
-
-app.delete("/:id{[0-9]+}", (c) => {
+app.get("/:id{[0-9]+}", async (c) => {
   const id = Number.parseInt(c.req.param("id"));
 
-  const teacher = teachers.find((teacher) => teacher.id === id);
+  const teacher = await db.select().from(teachers).where(eq(teachers.id, id));
 
-  return c.json(teacher);
+  if (teacher.length === 0) {
+    return c.json({ error: "Teacher not found" }, 404);
+  }
+
+  return c.json(teacher[0]);
+});
+
+app.post("/", zValidator("json", teacherSchema), async (c) => {
+  const teacher = c.req.valid("json");
+
+  const newTeacher = await db.insert(teachers).values(teacher).returning();
+
+  return c.json(newTeacher[0], 201);
+});
+
+app.delete("/:id{[0-9]+}", async (c) => {
+  const id = Number.parseInt(c.req.param("id"));
+
+  const deletedTeacher = await db
+    .delete(teachers)
+    .where(eq(teachers.id, id))
+    .returning();
+
+  if (deletedTeacher.length === 0) {
+    return c.json({ error: "Teacher not found" }, 404);
+  }
+
+  return c.json(deletedTeacher[0]);
 });
 // app.put("/api/teachers/:id", validator("param", { id: "number" }), (c) => {
 //   const id = c.req.param("id");
