@@ -5,7 +5,7 @@
   "private": true,
   "scripts": {
     "dev": "bun --watch index.ts",
-    "dev:all": "bun run dev & bun run dev:frontend",
+    "dev:all": "bun run dev & cd web && bun run dev",
     "build": "cd web && bun run build"
   },
   "devDependencies": {
