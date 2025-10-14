@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "bun --watch index.ts",
     "dev:all": "bun run dev & cd web && bun run dev",
+    "start": "bun index.ts",
     "build": "cd web && bun run build"
   },
   "devDependencies": {

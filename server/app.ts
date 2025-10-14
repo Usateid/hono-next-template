@@ -1,45 +1,31 @@
 import { Hono } from "hono";
 import { logger } from "hono/logger";
+import { cors } from "hono/cors";
 
 import teacherRouter from "./routes/teacher";
 
 const app = new Hono();
 
+// CORS middleware - permette richieste dal frontend Vercel
+app.use(
+  "*",
+  cors({
+    origin: ["http://localhost:5173", process.env.FRONTEND_URL || "*"],
+    credentials: true,
+  })
+);
+
 app.use(logger());
+
+// Health check endpoint
+app.get("/", (c) => {
+  return c.json({
+    message: "Backend API is running",
+    timestamp: new Date().toISOString(),
+  });
+});
 
 // API routes
 app.route("/api/teachers", teacherRouter);
-
-// Serve all static files and HTML pages
-app.get("*", async (c) => {
-  const path = new URL(c.req.url).pathname;
-
-  // Try to serve the file directly (for static assets like JS, CSS, images)
-  let file = Bun.file(`./web/dist${path}`);
-  if (await file.exists()) {
-    return new Response(file);
-  }
-
-  // Try to serve as HTML page
-  file = Bun.file(`./web/dist${path}.html`);
-  if (await file.exists()) {
-    return c.html(await file.text());
-  }
-
-  // Try index.html for root
-  if (path === "/") {
-    file = Bun.file("./web/dist/index.html");
-    if (await file.exists()) {
-      return c.html(await file.text());
-    }
-  }
-
-  // Return 404 page
-  const notFound = Bun.file("./web/dist/404.html");
-  if (await notFound.exists()) {
-    return c.html(await notFound.text(), 404);
-  }
-  return c.notFound();
-});
 
 export default app;
