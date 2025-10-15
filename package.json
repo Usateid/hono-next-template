@@ -3,11 +3,16 @@
   "module": "index.ts",
   "type": "module",
   "private": true,
+  "workspaces": [
+    "web"
+  ],
   "scripts": {
     "dev": "bun --watch index.ts",
     "dev:all": "bun run dev & cd web && bun run dev",
     "start": "bun index.ts",
     "build": "cd web && bun run build",
+    "db:up": "docker-compose up -d",
+    "db:down": "docker-compose down",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "db:push": "drizzle-kit push",

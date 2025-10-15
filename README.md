@@ -1,66 +1,96 @@
 # Bonobo - Monorepo Bun + Hono + Next.js
 
-Progetto full-stack con:
+Full-stack project with:
 - **Backend**: Hono + Bun
 - **Frontend**: Next.js 15 + React 19
 
 ## 🚀 Quick Start
 
-### Installazione
+### Installation
 
 ```bash
-# Installa dipendenze backend
+# Install backend dependencies
 bun install
 
-# Installa dipendenze frontend
+# Install frontend dependencies
 cd web && bun install
 ```
 
-### Sviluppo Locale
+### Database Setup
+
+**Option 1: Local Database (recommended for development)**
+```bash
+# Start PostgreSQL with Docker
+bun run db:up
+
+# Create .env with DATABASE_URL
+cp env.example .env
+
+# Push schema to database
+bun run db:push
+```
+
+**Option 2: Neon (recommended for production)**
+
+See [QUICK_START.md](./QUICK_START.md) for Neon setup.
+
+📚 **Complete local database guide:** [DATABASE_LOCAL.md](./DATABASE_LOCAL.md)
+
+### Local Development
 
 ```bash
-# Backend + Frontend insieme
+# Backend + Frontend together
 bun run dev:all
 
-# Solo Backend (porta 3000)
+# Backend only (port 3000)
 bun run dev
 
-# Solo Frontend (porta 5173)
+# Frontend only (port 5173)
 cd web && bun run dev
+
+# Drizzle Studio (database GUI)
+bun run db:studio
 ```
 
 ### Build
 
 ```bash
-# Build frontend per produzione
+# Build frontend for production
 bun run build
 ```
 
-## 📁 Struttura Progetto
+## 📁 Project Structure
 
 ```
 .
-├── server/          # Backend Hono
-│   ├── app.ts      # App principale
-│   ├── routes/     # Route API
+├── server/          # Hono Backend
+│   ├── app.ts      # Main app
+│   ├── routes/     # API routes
 │   └── types/      # TypeScript types
-├── web/            # Frontend Next.js
+├── web/            # Next.js Frontend
 │   └── src/
-│       ├── app/    # Pages Next.js
+│       ├── app/    # Next.js pages
 │       └── lib/    # Utilities
-├── index.ts        # Entry point backend
-└── package.json    # Dipendenze backend
+├── index.ts        # Backend entry point
+└── package.json    # Backend dependencies
 ```
 
 ## 🌐 Deploy
 
-Vedi [DEPLOY.md](./DEPLOY.md) per istruzioni dettagliate sul deploy:
-- Frontend su **Vercel**
-- Backend su **Render**
+See [DEPLOY.md](./DEPLOY.md) for detailed deployment instructions:
+- Frontend on **Vercel**
+- Backend on **Render**
 
 ## 🛠️ Tech Stack
 
 - **Runtime**: [Bun](https://bun.com)
 - **Backend**: [Hono](https://hono.dev)
 - **Frontend**: [Next.js 15](https://nextjs.org) + [React 19](https://react.dev)
+- **Database**: [PostgreSQL](https://postgresql.org) + [Drizzle ORM](https://orm.drizzle.team)
 - **Styling**: Tailwind CSS
+
+## 📚 Documentation
+
+- [QUICK_START.md](./QUICK_START.md) - Quick deploy guide
+- [DATABASE_LOCAL.md](./DATABASE_LOCAL.md) - Local database setup
+- [DEPLOY.md](./DEPLOY.md) - Complete deployment guide
