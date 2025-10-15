@@ -4,6 +4,6 @@
   "installCommand": "cd web && bun install",
   "outputDirectory": "web/.next",
   "framework": null,
-  "ignoreCommand": "bash ./scripts/vercel-ignore-build.sh"
+  "ignoreCommand": "if git diff --quiet HEAD^ HEAD -- web/ ':!*.md' ':!*.txt' ':!LICENSE'; then echo 'No frontend changes'; exit 0; else echo 'Frontend changes detected'; exit 1; fi"
 }
 

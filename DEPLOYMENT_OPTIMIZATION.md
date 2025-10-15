@@ -5,7 +5,7 @@ This configuration prevents unnecessary builds on Render and Vercel when non-rel
 ## How It Works
 
 ### Vercel (Frontend - `/web`)
-- **Files**: `vercel.json` + `scripts/vercel-ignore-build.sh`
+- **File**: `vercel.json` with inline `ignoreCommand`
 - **Logic**: Deploys **only** if there are changes in the `/web` folder
 - **Ignores**: README, markdown files in root, backend changes
 
@@ -26,18 +26,15 @@ This configuration prevents unnecessary builds on Render and Vercel when non-rel
 
 ## Local Testing
 
-To test the Vercel script:
+To test the Vercel ignore logic locally:
 
 ```bash
-bash ./scripts/vercel-ignore-build.sh
+if git diff --quiet HEAD^ HEAD -- web/ ':!*.md' ':!*.txt' ':!LICENSE'; then echo '✅ Build skipped (no frontend changes)'; else echo '🚀 Build proceeds (frontend changes detected)'; fi
 ```
-
-- **Exit code 0**: Build skipped (no frontend changes)
-- **Exit code 1**: Build proceeds (frontend changes detected)
 
 ## Notes
 
 - The first time you push after this configuration, it might deploy to both services anyway
-- Make sure the script is executable: `chmod +x scripts/vercel-ignore-build.sh`
 - On Vercel, you might need to reconnect the project to apply the `vercel.json` configuration
+- The ignore logic uses git diff to compare changes between commits
 
