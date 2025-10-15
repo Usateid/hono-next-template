@@ -1,0 +1,9 @@
+{
+  "buildCommand": "cd web && bun run build",
+  "devCommand": "cd web && bun run dev",
+  "installCommand": "cd web && bun install",
+  "outputDirectory": "web/.next",
+  "framework": null,
+  "ignoreCommand": "bash ./scripts/vercel-ignore-build.sh"
+}
+

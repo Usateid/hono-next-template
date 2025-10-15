@@ -5,6 +5,18 @@ services:
     plan: free
     buildCommand: bun install
     startCommand: bun run start
+    # Auto-deploy only when backend files change
+    autoDeploy: true
+    rootDir: .
+    # Ignore changes in these directories/files
+    ignoredPaths:
+      - web/**
+      - "*.md"
+      - LICENSE
+      - .gitignore
+      - QUICK_START.md
+      - DATABASE_LOCAL.md
+      - DEPLOY.md
     envVars:
       - key: PORT
         generateValue: true
